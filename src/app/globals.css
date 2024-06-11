@@ -1,8 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&display=swap');
+@import "../../node_modules/toastr/build/toastr.min.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
     font-family: "Ubuntu Sans Mono", monospace;
+}
+
+.code-box {
+    @apply w-full bg-gray-900 text-gray-50
 }

@@ -21,6 +21,24 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ".next/types/app/(marketing)/layout.tsx"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS",
+      "paths": {
+        "@/*": ["./src/*"]
+      }
+    }
+  },
+  "typeAcquisition": {
+   "include": ["src/types/global.d.ts"] 
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/types/app/(marketing)/layout.tsx",
+    "scripts/seed.js"
+  ],
   "exclude": ["node_modules"]
 }
