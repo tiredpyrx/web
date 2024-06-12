@@ -2,7 +2,12 @@
  * @fileoverview This file is the main file for request validation
  */
 
-import { VALIDATON_RULES_ENUM, VALIDATON_RULES_ERROR_MESSAGES, VALIDATON_RULES_ACTIONS } from "./rules";
+import {
+  VALIDATON_RULES_ENUM,
+  VALIDATON_RULES_ERROR_MESSAGES,
+  VALIDATON_RULES_ACTIONS,
+  validateForField,
+} from "./rules";
 
 /**
  *
@@ -16,8 +21,14 @@ import { VALIDATON_RULES_ENUM, VALIDATON_RULES_ERROR_MESSAGES, VALIDATON_RULES_A
 export async function validate(
   upcomingData: any,
   rules: { [key: string]: Array<string> | string }
-): Promise<string[]> {
+): Promise<{
+  failed: boolean;
+  succeed: boolean;
+  validated: Array<string>;
+  errorMessages: string[];
+}> {
   let errors = {} as { [fieldName: string]: Array<string> };
+  let validated = [];
   let errorMessages: Array<string> = [];
   for (const fieldName in rules) {
     const fieldValue = upcomingData[fieldName];
@@ -25,47 +36,31 @@ export async function validate(
     if (_isString(_fieldRules)) _fieldRules = _fieldRules.split("|");
     const fieldRulesArray = _fieldRules;
     for (const rule of fieldRulesArray) {
-      console.log("upcoming data is: ", upcomingData);
-      console.log("upcoming rule is: ", rule);
-      console.log("so far errors are: ", errors);
-      console.log("rules that passed to validate function are: ", rules);
+      const validationObject = validateForField(fieldName, rule, fieldValue);
 
-      // todo: fix upcoming rule types so we dont have to cast the ruel type
-      // todo: if arguments lenght of VALIDATON_RULES_ACTIONS[rule] is > 1 then _validationResultBool(upcomingData[fieldName], rule.substring(":"))
-      const validationResultBool = VALIDATON_RULES_ACTIONS[rule as "string"|"number"]
-      console.log("validation result type for rule %s is : ", rule, validationResultBool(upcomingData[fieldName]));
-      if (!validationResultBool(fieldValue)) {
-        console.log("we found en error for rule: ", rule);
-        let new_error_message = getErrorMessageForSingleRule(
-          rule as keyof typeof VALIDATON_RULES_ENUM
-        );
-        let oldErrorsForField = errors[fieldName] || [];
+      if (!validationObject.success) {
+        let oldFieldErrors = errors[fieldName] || [];
         errors = {
           ...errors,
-          [fieldName]: [...oldErrorsForField, new_error_message],
+          [fieldName]: [...oldFieldErrors, validationObject.message],
         };
       } else {
-        console.log("we couldn't find an error for rule: ", rule);
+        validated.push(fieldName);
       }
     }
-    console.log("errors after last field are: ", errors);
   }
-  console.log("all errors are: ", errors);
 
-  // create error messages for every errors property, if any
-  for (const fieldName in errors) {
-    const fieldErrorMessageArray = errors[fieldName];
-    for (const fieldErrorMessage of fieldErrorMessageArray) {
-      console.log(fieldErrorMessage);
-      const formattedFieldErrorMessage =
-        getFormattedValidationErrorMessageForField(
-          fieldName,
-          fieldErrorMessage
-        );
-      errorMessages.push(formattedFieldErrorMessage);
+  for (const fieldErrors of Object.values(errors)) {
+    for (const fieldError of fieldErrors) {
+      errorMessages.push(fieldError);
     }
   }
-  return errorMessages;
+  return {
+    succeed: !Boolean(errorMessages.length),
+    failed: Boolean(errorMessages.length),
+    errorMessages,
+    validated,
+  };
 }
 
 function createFormattedValidationErrorMessageForField(
@@ -113,7 +108,6 @@ function getErrorMessageForSingleRule(
 ) {
   return VALIDATON_RULES_ERROR_MESSAGES[rule];
 }
-
 
 function _isString(value: any): value is string {
   return typeof value === "string";

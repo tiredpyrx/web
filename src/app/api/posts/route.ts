@@ -13,10 +13,12 @@ export async function POST(request: NextRequest) {
 
   // client.end();
 
-  const errorsMessages = await validate(requestJSON, POST_RULES);
+  const validation = await validate(requestJSON, POST_RULES);
 
-  if (errorsMessages.length)
-    return NextResponse.json({ errors: errorsMessages }, { status: 422 });
+  if (validation.failed)
+    {console.log(validation)
+    return NextResponse.json({ errors: validation.errorMessages }, { status: 422 });}
 
+  console.log(validation)
   return NextResponse.json({ message: "Post created successfully!" }, { status: 201 });
 }

@@ -13,7 +13,6 @@ export const VALIDATON_RULES_ACTIONS = {
   number: (value: any) => _isNumber(value),
   integer: (value: any) => _isInteger(value),
   decimal: (value: any) => _isDecimal(value),
-  // is_type_of: (value: any, type: any): value is typeof type => value === type,
   min: (value: string | number, min: number) =>
     _isString(value) ? value.length >= min : value >= min,
   max: (value: string | number, max: number) =>
@@ -30,10 +29,8 @@ export const VALIDATON_RULES_ERROR_MESSAGES = {
   max: "field value must be maximum :slug!",
 } as const;
 
-const VALIDATON_RULES: {
-  [key: Partial<"required">]: (...args: any) => { message: string; success: boolean };
-} = {
-  requried(fieldName: string, value: any) {
+const VALIDATON_RULES = {
+  required(fieldName: string, value: any) {
     return {
       message: _createErrorMessage(fieldName, "required"),
       success: VALIDATON_RULES_ACTIONS.required(value),
@@ -63,32 +60,25 @@ const VALIDATON_RULES: {
       success: VALIDATON_RULES_ACTIONS.decimal(value),
     };
   },
-  min(fieldName: string, value: any, min: number) {
-    return {
-      message: _createErrorMessage(fieldName, "min"),
-      success: VALIDATON_RULES_ACTIONS.min(value, min),
-    };
-  },
-  max(fieldName: string, value: any, max: number) {
-    return {
-      message: _createErrorMessage(fieldName, "max"),
-      success: VALIDATON_RULES_ACTIONS.min(value, max),
-    };
-  },
 } as const;
 
-const validateForField = (fieldName: string, value: any, ruleParams: {
-  min: number,
-  max: number
-}) => {
-  return VALIDATON_RULES.asdas;
+export function validateForField(fieldName: string, rule: string, value: any) {
+  return VALIDATON_RULES[rule as keyof typeof VALIDATON_RULES](
+    fieldName,
+    value
+  );
 }
 
 function _createErrorMessage(
   fieldName: string,
   rule: keyof typeof VALIDATON_RULES_ERROR_MESSAGES
 ): string {
-  return fieldName + " " + VALIDATON_RULES_ERROR_MESSAGES[rule];
+  return (
+    fieldName.charAt(0).toUpperCase() +
+    fieldName.substring(1) +
+    " " +
+    VALIDATON_RULES_ERROR_MESSAGES[rule]
+  );
 }
 
 const _isString = (value: any): value is string => typeof value === "string";
