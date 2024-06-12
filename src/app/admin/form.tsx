@@ -13,15 +13,17 @@ export default function Form() {
         body: JSON.stringify({
           title: formData.get("title"),
           description: formData.get("description"),
+          quantity: formData.get("qty"),
         }),
       });
       const data = await response.json();
 
       if (data.errors?.length) {
         for (const errorMessage of data.errors) {
-          toastr.error(errorMessage)
+          toastr.error(errorMessage);
         }
-      }
+      } else toastr.success(data.message)
+
     } catch (error) {
       console.error({ error });
     }
@@ -41,6 +43,7 @@ export default function Form() {
           className="px-2 py-1"
           defaultValue={"hello world this is a default value asdsad"}
         ></textarea>
+        <input type="number" name="qty" />
         <button className="text-white bg-blue-500 px-4 py-2 rounded">
           submit
         </button>
