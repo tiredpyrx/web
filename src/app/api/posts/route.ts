@@ -16,9 +16,7 @@ export async function POST(request: NextRequest) {
   const validation = await validate(requestJSON, POST_RULES);
 
   if (validation.failed)
-    {console.log(validation)
-    return NextResponse.json({ errors: validation.errorMessages }, { status: 422 });}
+    return NextResponse.json({ errors: validation.errorMessages }, { status: 422 });
 
-  console.log(validation)
   return NextResponse.json({ message: "Post created successfully!" }, { status: 201 });
 }

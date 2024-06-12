@@ -2,6 +2,7 @@
  * @fileoverview This file is the main file for request validation
  */
 
+import { _isString } from "@/helpers";
 import {
   VALIDATON_RULES_ENUM,
   VALIDATON_RULES_ERROR_MESSAGES,
@@ -14,9 +15,7 @@ import {
  * @param upcomingData
  * @param rules
  * @returns Error message array
- * @description Validate upcoming request with provided rules, passed data must be converted to json first.
- * Rules must be an object that holds field names as keys an rules as values.
- * Rules's values can be a string or a string array, every rule value that are typeof string must be divided with symbol "|".
+ * @description Validate upcoming request with provided rules, passed request data must be converted to json first.
  */
 export async function validate(
   upcomingData: any,
@@ -35,8 +34,19 @@ export async function validate(
     let _fieldRules = rules[fieldName];
     if (_isString(_fieldRules)) _fieldRules = _fieldRules.split("|");
     const fieldRulesArray = _fieldRules;
-    for (const rule of fieldRulesArray) {
-      const validationObject = validateForField(fieldName, rule, fieldValue);
+    for (let rule of fieldRulesArray) {
+      let validationObject;
+      const ruleHasParamSeparator = rule.includes(":")
+      if (ruleHasParamSeparator) {
+        const ruleParam = rule.slice(rule.lastIndexOf(":") + 1);
+        rule = rule.substring(0, rule.lastIndexOf(":"));
+        validationObject = validateForField(
+          fieldName,
+          rule,
+          fieldValue,
+          ruleParam
+        );
+      } else validationObject = validateForField(fieldName, rule, fieldValue);
 
       if (!validationObject.success) {
         let oldFieldErrors = errors[fieldName] || [];
@@ -49,7 +59,7 @@ export async function validate(
       }
     }
   }
-
+  
   for (const fieldErrors of Object.values(errors)) {
     for (const fieldError of fieldErrors) {
       errorMessages.push(fieldError);
@@ -61,54 +71,4 @@ export async function validate(
     errorMessages,
     validated,
   };
-}
-
-function createFormattedValidationErrorMessageForField(
-  fieldName: string,
-  message: string
-) {
-  return (
-    fieldName.charAt(0).toUpperCase().concat(fieldName.substring(1)) +
-    " " +
-    message
-  );
-}
-
-function getFormattedValidationErrorMessageForField(
-  fieldName: string,
-  message: string
-) {
-  return createFormattedValidationErrorMessageForField(fieldName, message);
-}
-
-function validateFieldForSingleRule(
-  data: any,
-  fieldName: string,
-  rule: string
-) {
-  const fieldValue = data[fieldName];
-  switch (rule) {
-    case VALIDATON_RULES_ENUM.required:
-      return (
-        typeof fieldValue !== "undefined" &&
-        fieldValue !== null &&
-        fieldValue !== ""
-      );
-      break;
-    case VALIDATON_RULES_ENUM.string:
-      return typeof fieldValue === "string";
-      break;
-    default:
-      throw new Error("Given rule is not in the ValidationRules!"); // if given rule is not in rules throw error
-  }
-}
-
-function getErrorMessageForSingleRule(
-  rule: keyof typeof VALIDATON_RULES_ERROR_MESSAGES
-) {
-  return VALIDATON_RULES_ERROR_MESSAGES[rule];
-}
-
-function _isString(value: any): value is string {
-  return typeof value === "string";
 }

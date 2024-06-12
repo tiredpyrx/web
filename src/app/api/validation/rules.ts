@@ -1,3 +1,5 @@
+import { _isString, _isNumber as isNumber } from "@/helpers";
+
 export enum VALIDATON_RULES_ENUM {
   required = "required",
   string = "string",
@@ -13,10 +15,10 @@ export const VALIDATON_RULES_ACTIONS = {
   number: (value: any) => _isNumber(value),
   integer: (value: any) => _isInteger(value),
   decimal: (value: any) => _isDecimal(value),
-  min: (value: string | number, min: number) =>
-    _isString(value) ? value.length >= min : value >= min,
-  max: (value: string | number, max: number) =>
-    _isString(value) ? value.length <= max : value <= max,
+  min: (value: string|number, min: string|number) => Number(value) >= Number(min),
+  max: (value: string|number, max: string|number) => Number(value) <= Number(max),
+  lengthmin: (value: string, min: number|string) => value.length >= Number(min),
+  lengthmax: (value: string, min: number|string) => value.length <= Number(min),
 } as const;
 
 export const VALIDATON_RULES_ERROR_MESSAGES = {
@@ -29,7 +31,16 @@ export const VALIDATON_RULES_ERROR_MESSAGES = {
   max: "field value must be maximum :slug!",
 } as const;
 
-const VALIDATON_RULES = {
+const VALIDATON_RULES: {
+  [key: string]: (
+    name: string,
+    value: any,
+    param?: string | number
+  ) => {
+    message: string;
+    success: boolean;
+  };
+} = {
   required(fieldName: string, value: any) {
     return {
       message: _createErrorMessage(fieldName, "required"),
@@ -60,9 +71,35 @@ const VALIDATON_RULES = {
       success: VALIDATON_RULES_ACTIONS.decimal(value),
     };
   },
+  min(fieldName: string, value: any, min?: string | number) {
+    min = Number(min);
+    return {
+      message: _createErrorMessage(fieldName, "min", min),
+      success: VALIDATON_RULES_ACTIONS.min(value, min),
+    };
+  },
+  max(fieldName: string, value: any, max?: string|number) {
+    max = Number(max);
+    return {
+      message: _createErrorMessage(fieldName, "max", max),
+      success: VALIDATON_RULES_ACTIONS.max(value, max),
+    };
+  },
 } as const;
 
-export function validateForField(fieldName: string, rule: string, value: any) {
+export function validateForField(
+  fieldName: string,
+  rule: string,
+  value: any,
+  param?: string | number
+) {
+  if (param)
+    return VALIDATON_RULES[rule as keyof typeof VALIDATON_RULES](
+      fieldName,
+      value,
+      param
+    );
+
   return VALIDATON_RULES[rule as keyof typeof VALIDATON_RULES](
     fieldName,
     value
@@ -71,19 +108,22 @@ export function validateForField(fieldName: string, rule: string, value: any) {
 
 function _createErrorMessage(
   fieldName: string,
-  rule: keyof typeof VALIDATON_RULES_ERROR_MESSAGES
+  rule: keyof typeof VALIDATON_RULES_ERROR_MESSAGES,
+  slug?: string | number
 ): string {
+  const messagePrefix = VALIDATON_RULES_ERROR_MESSAGES[rule].includes(":slug")
+    ? VALIDATON_RULES_ERROR_MESSAGES[rule].replace(":slug", String(slug))
+    : VALIDATON_RULES_ERROR_MESSAGES[rule];
   return (
     fieldName.charAt(0).toUpperCase() +
     fieldName.substring(1) +
     " " +
-    VALIDATON_RULES_ERROR_MESSAGES[rule]
+    messagePrefix
   );
 }
 
-const _isString = (value: any): value is string => typeof value === "string";
 const _isNumber = (value: any): value is number =>
-  typeof value === "number" ||
+  isNumber(value) ||
   (_isMatchable(value) && _isMatched(value, /^\d+(\.\d+)?$/));
 const _isDecimal = (value: any) =>
   _isMatchable(value) && _isMatched(value, /^\d+(\.\d+)$/);
