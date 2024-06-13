@@ -17,5 +17,5 @@ p {
 }
 
 .code-block .shiki {
-    @apply p-4 rounded-lg overflow-x-scroll    
+    @apply p-4 rounded-lg overflow-x-scroll
 }
