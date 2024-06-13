@@ -1,4 +1,4 @@
-import { Client } from "pg";
+import { Client, Pool } from "pg";
 import config from "./config";
 
 function createNewClient(): Client {
@@ -18,6 +18,8 @@ client.prependListener("end", () => {
   client = getNewClient();
 });
 
-client.connect();
+const pool = new Pool({
+  connectionString: config.POSTGRES_URL
+})
 
-export default client;
+export default pool;
