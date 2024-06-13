@@ -8,11 +8,14 @@ body {
     font-family: "Ubuntu Sans Mono", monospace;
 }
 
-.shiki {
-    @apply p-4 rounded-lg overflow-x-scroll
-}
-
 p {
     padding: 10px 0
 }
 
+.code-block {
+    @apply my-4
+}
+
+.code-block .shiki {
+    @apply p-4 rounded-lg overflow-x-scroll    
+}
