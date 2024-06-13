@@ -11,3 +11,7 @@ body {
 .shiki {
     @apply p-4 rounded-lg overflow-x-scroll
 }
+
+p {
+    padding: 10px 0
+}

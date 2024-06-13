@@ -1,4 +1,5 @@
 import pool from "@/app/lib/server/db";
+import Link from "next/link";
 
 export const fetchPosts = async () => {
   // const client = new Client({
@@ -8,7 +9,7 @@ export const fetchPosts = async () => {
   const client = await pool.connect();
   const posts = await client.query("SELECT * FROM posts;")
   client.release();
-  return [];
+  return posts.rows;
 };
 
 export default async function Blog() {
@@ -19,10 +20,10 @@ export default async function Blog() {
         {posts.length &&
           posts.map(
             (post: { id: number; title: string; description?: string }) => (
-              <div className="p-4 bg-gray-300 rounded-md">
+              <Link key={post.id} href={`blog/${post.id}`} className="p-4 bg-gray-300 rounded-md block">
                 <h3 className="mb-2">{post.title}</h3>
                 <p className="text-sm">{post.description}</p>
-              </div>
+              </Link>
             )
           )}
       </div>

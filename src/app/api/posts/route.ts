@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validate } from "../validation";
 import { POST_RULES } from "./posts.rules";
-import { Client } from "pg";
+import { Pool } from "pg";
+import config from "@/app/lib/server/config";
+import pool from "@/app/lib/server/db";
 
 export async function POST(request: NextRequest) {
   const requestJSON = await request.json();
@@ -14,14 +16,9 @@ export async function POST(request: NextRequest) {
       { errors: validation.errorMessages },
       { status: 422 }
     );
-
-  // try {
-  //   await client.query(
-  //     `INSERT INTO posts (title, description) VALUES ('${title}', '${description}');`
-  //   );
-  // } catch (e) {}
-
-  // client.end();
+  const client = await pool.connect();
+  await client.query(`INSERT INTO posts (title, description) VALUES ($_quote_$${title}$_quote_$, $_quote_$${description}$_quote_$);`)
+  client.release();
 
   return NextResponse.json(
     { message: "Post created successfully!" },
