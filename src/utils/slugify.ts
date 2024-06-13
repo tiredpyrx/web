@@ -1,5 +1,5 @@
 interface SlugifyProps {
-  text: string;
+  text?: string;
   options?: {
     replacements?: {
       [key: string]: Array<string>;
@@ -14,7 +14,8 @@ interface SlugifyProps {
 function slugify({
   text,
   options = { trim: true, lower: true },
-}: SlugifyProps): string {
+}: SlugifyProps): string|undefined {
+  if (!text) return text;
   if (options?.trim) text = text.trim();
   if (options?.lowerLocale) text = text.toLocaleLowerCase();
   else if (options?.lower) text = text.toLowerCase();
