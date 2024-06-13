@@ -3,7 +3,7 @@ import { validate } from "../validation";
 import { POST_RULES } from "./posts.rules";
 import { Pool } from "pg";
 import config from "@/app/lib/server/config";
-import pool from "@/app/lib/server/db";
+import pool from "../../../../lib/server/db";
 
 export async function POST(request: NextRequest) {
   const requestJSON = await request.json();

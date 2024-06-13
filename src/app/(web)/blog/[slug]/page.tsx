@@ -1,4 +1,4 @@
-import pool from "@/app/lib/server/db";
+import pool from "../../../../../lib/server/db";
 import parse from "html-react-parser";
 import React from "react";
 

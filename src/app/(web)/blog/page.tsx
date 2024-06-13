@@ -1,4 +1,4 @@
-import pool from "@/app/lib/server/db";
+import pool from "../../../../lib/server/db";
 import Link from "next/link";
 import { slugify } from "@/utils";
 
