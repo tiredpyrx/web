@@ -10,7 +10,7 @@ const Header = () => {
               <div className="select-none pointer-events-none">
                 <img
                   width={50}
-                  src="media/images/logo.png"
+                  src="/media/images/logo.png"
                   alt="osama bin laden"
                 />
               </div>

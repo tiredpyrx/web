@@ -123,7 +123,7 @@ export async function CodeBlock({
 
   // const block = text.map(e => typeof e === "string" ? parse(e) : e)
 
-  return <div dangerouslySetInnerHTML={{ __html: html }}></div>;
+  return <div className="code-block" dangerouslySetInnerHTML={{ __html: html }}></div>;
 }
 
 export default async function Home() {
