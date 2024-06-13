@@ -8,6 +8,6 @@ body {
     font-family: "Ubuntu Sans Mono", monospace;
 }
 
-.code-box {
-    @apply w-full bg-gray-900 text-gray-50
+.shiki {
+    @apply p-4 rounded-lg overflow-x-scroll
 }

@@ -1,22 +1,21 @@
 import { Client } from "pg";
 import config from "./config";
 
-function createNewClient(name?:string): Client {
+function createNewClient(): Client {
   const client = new Client({
-    user: name,
     connectionString: config.POSTGRES_URL,
   });
   return client;
 }
 
-function getNewClient(name?: string): Client {
-  return createNewClient(name);
+export function getNewClient(): Client {
+  return createNewClient();
 }
 
 let client = getNewClient();
 
 client.prependListener("end", () => {
-  client = getNewClient("postgres://testuser:dogakorkmaz@localhost:5432/test");
+  client = getNewClient();
 });
 
 client.connect();
