@@ -1,5 +1,6 @@
 import pool from "@/app/lib/server/db";
 import Link from "next/link";
+import { castToSlug } from "./[slug]/page";
 
 export const fetchPosts = async () => {
   // const client = new Client({
@@ -20,7 +21,7 @@ export default async function Blog() {
         {posts.length &&
           posts.map(
             (post: { id: number; title: string; description?: string }) => (
-              <Link key={post.id} href={`blog/${post.id}`} className="p-4 bg-gray-300 rounded-md block">
+              <Link key={post.id} href={`blog/${castToSlug(post.title)}`} className="p-4 bg-gray-300 rounded-md block">
                 <h3 className="mb-2">{post.title}</h3>
                 <p className="text-sm">{post.description}</p>
               </Link>
