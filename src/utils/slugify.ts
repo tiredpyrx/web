@@ -1,17 +1,20 @@
-interface SlugifyOptions {
-  replacements?: {
-    [key: string]: Array<string>;
+interface SlugifyProps {
+  text: string;
+  options?: {
+    replacements?: {
+      [key: string]: Array<string>;
+    };
+    delete?: RegExp;
+    lower?: boolean;
+    lowerLocale?: boolean;
+    trim?: boolean;
   };
-  delete?: RegExp;
-  lower?: boolean;
-  lowerLocale?: boolean;
-  trim?: boolean;
 }
 
-function slugify(
-  text: string,
-  options: SlugifyOptions = { trim: true, lower: true }
-): string {
+function slugify({
+  text,
+  options = { trim: true, lower: true },
+}: SlugifyProps): string {
   if (options?.trim) text = text.trim();
   if (options?.lowerLocale) text = text.toLocaleLowerCase();
   else if (options?.lower) text = text.toLowerCase();
@@ -42,4 +45,4 @@ function slugify(
 }
 
 export { slugify };
-export type { SlugifyOptions };
+export type { SlugifyProps };

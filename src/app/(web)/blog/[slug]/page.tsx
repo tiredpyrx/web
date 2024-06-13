@@ -9,9 +9,10 @@ const fetchPost = async (slug: string) => {
   console.log("here", slug);
   const client = await pool.connect();
   const posts = (await client.query(`SELECT * FROM posts`)).rows;
-  const post = posts.filter((post: { title: string }) => {
-    return slugify(post.title) == slugify(slug);
-  })[0] || {};
+  const post =
+    posts.filter((post: { title: string }) => {
+      return slugify({ text: post.title }) == slugify({ text: slug });
+    })[0] || {};
   client.release();
   return post;
 };

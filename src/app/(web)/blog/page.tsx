@@ -20,7 +20,7 @@ export default async function Blog() {
             (post: { id: number; title: string; description?: string }) => (
               <Link
                 key={post.id}
-                href={`blog/${slugify(post.title)}`}
+                href={`blog/${slugify({text: post.title})}`}
                 className="p-4 bg-gray-300 rounded-md block"
               >
                 <h3 className="mb-2">{post.title}</h3>
