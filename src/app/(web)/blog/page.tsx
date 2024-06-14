@@ -3,7 +3,10 @@ import { slugify } from "@/utils";
 import { db } from "@/database";
 
 export const fetchPosts = async () => {
-  return (await db.selectFrom("posts").selectAll().execute());
+  return await db
+    .selectFrom("posts")
+    .select(["id", "title", "description"])
+    .execute();
 };
 
 export default async function Blog() {

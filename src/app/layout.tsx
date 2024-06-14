@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { IsClientContextProvider } from "./contexts/IsClientContext";
 
 export const metadata: Metadata = {
   title: "Doğa Korkmaz",
@@ -13,9 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-        <body>
-            {children}
-        </body>
+      <body>
+        <IsClientContextProvider>{children}</IsClientContextProvider>
+      </body>
     </html>
   );
 }

@@ -39,6 +39,6 @@
     ".next/types/**/*.ts",
     ".next/types/app/(marketing)/layout.tsx",
     "scripts/seed.js"
-, "scripts/seed.ts"  ],
+, "scripts/seed.ts", "src/app/(web)/editor/page.jsx"  ],
   "exclude": ["node_modules"]
 }

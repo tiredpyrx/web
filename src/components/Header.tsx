@@ -1,8 +1,36 @@
+"use client";
+
+import { useIsClient } from "@/app/contexts/IsClientContext";
+import classNames from "classnames";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 const Header = () => {
+  const headerRef = useRef<HTMLElement>(null);
+  const [isFadable, setIsFadable] = useState(false);
+  const isClient = useIsClient();
+  useEffect(() => {
+    if (!isClient) return;
+    setIsFadable(
+      !!headerRef.current && (window.screenTop > 0 || window.scrollY > 0)
+    );
+    const scrollListener = () => {
+      setIsFadable(!!headerRef.current && window.scrollY > 0);
+    };
+    window.addEventListener("scroll", scrollListener);
+    return () => window.removeEventListener("scroll", scrollListener);
+  }, [isClient]);
+
   return (
-    <header className="p-4 bg-lime-800 text-white">
+    <header
+      ref={headerRef}
+      className={classNames(
+        "p-4 bg-lime-800 text-white sticky top-0 duration-200 z-50",
+        {
+          "opacity-70": isFadable,
+        }
+      )}
+    >
       <nav>
         <div className="container mx-auto">
           <div className="flex items-center justify-between">
