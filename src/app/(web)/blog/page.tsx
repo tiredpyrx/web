@@ -2,15 +2,20 @@ import Link from "next/link";
 import { slugify } from "@/utils";
 import { db } from "@/database";
 
-export const fetchPosts = async () => {
-  return await db
-    .selectFrom("posts")
-    .select(["id", "title", "description"])
-    .execute();
+export const fetchCache = 'force-no-store';
+export const dynamic = 'force-dynamic'
+
+
+const fetchPosts = async () => {
+ return (await db
+   .selectFrom("posts")
+   .select(["id", "title", "description"])
+   .execute());
 };
 
 export default async function Blog() {
   const posts = await fetchPosts();
+  console.log(posts);
   return (
     <div className="max-w-3xl mx-auto w-full h-full bg-gray-50 p-6 rounded">
       <div className="grid grid-cols-2 gap-4">

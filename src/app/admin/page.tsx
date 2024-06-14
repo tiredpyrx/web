@@ -1,9 +1,14 @@
-"use server"
+// "use server"
+"use client"
 
 import Form from "./form";
 
+export const fetchCache = "force-no-store";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 function AdminPage() {
-    return <Form />
+  return <p>admin page</p>; // <Form />
 }
 
 export default AdminPage;

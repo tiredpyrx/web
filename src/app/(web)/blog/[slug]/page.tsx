@@ -5,6 +5,8 @@ import { createCodeBlock } from "@/utils";
 import { slugify } from "@/utils";
 import { db } from "@/database";
 
+export const fetchCache = 'force-no-store';
+
 const fetchPost = async (slug: string) => {
   console.log("here", slug);
   const posts = await db.selectFrom("posts").selectAll().execute();
