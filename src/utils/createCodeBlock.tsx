@@ -9,20 +9,16 @@ export interface CreateCodeBlockProps {
 }
 
 export async function createCodeBlock(props: CreateCodeBlockProps) {
-  let { text, language } = props;
+  let { text, language = "typescript" } = props;
   return reactStringReplace(
     text,
-    /<codeblock>\n?(.*?)<\/codeblock>/gms,
+    /```(?:\w+)?\s*\n(.*?)(?=^```)```/gmsi,
     async (match, idx) => {
-      const languageTag = match.match(/<language>\n?(.*?)<\/language>/gms)?.[0];
-      if (languageTag) {
-        language = languageTag.substring(
-          languageTag.indexOf(">") + 1,
-          languageTag.lastIndexOf("<")
-        ) as BundledLanguage;
-        match = match.replace(languageTag, "");
+      const lang = match.match(/```(\w+)/)?.[0] as BundledLanguage
+      if (lang) {
+        match = match.replace(lang, "");
       }
-      return await CodeBlock({ code: match, lang: language });
+      return await CodeBlock({ code: match, lang: language ?? lang });
     }
   );
 }
