@@ -24,7 +24,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <header className="my-8 text-center">
+      <header className="mt-8 mb-12 text-center">
       <h1 className="font-bold text-5xl">{post.title}</h1>
       </header>
       <article className="web-content">{content}</article>
