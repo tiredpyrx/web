@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validate } from "../validation";
 import { POST_RULES } from "./posts.rules";
-import { Pool } from "pg";
 import { db } from "@/database";
 
 export async function POST(request: NextRequest) {
