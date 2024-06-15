@@ -5,16 +5,23 @@ type CodeBlockProps = {
   code: string;
   lang?: BundledLanguage;
   theme?: BundledTheme;
-  trim?: boolean;
+  trim?: {
+    trimStartEnd?: boolean
+    trimStart?: boolean
+    trimEnd?: boolean
+  };
 };
 
 async function CodeBlock({
   code,
   lang = "javascript",
   theme = "github-dark",
-  trim = true,
+  trim = {
+    trimStartEnd: true
+  }
 }: CodeBlockProps) {
-  let html = await codeToHtml(trim ? code.trim() : code, {
+  code = trim.trimStartEnd ? code.trim() : trim.trimStart ? code.trimStart() : trim.trimEnd ? code.trimEnd() : code;
+  let html = await codeToHtml(code, {
     lang,
     theme,
   });

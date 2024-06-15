@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 // "use server"
 "use client"
 
+=======
+>>>>>>> af0adce (blog editor)
 import Form from "./form";
 
 export const fetchCache = "force-no-store";
