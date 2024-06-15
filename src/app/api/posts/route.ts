@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
   }
 
   return NextResponse.json(
-    { message: "Post created successfully!" },
+    { message: "Post created successfully!", title, description },
     { status: 201 }
   );
 }

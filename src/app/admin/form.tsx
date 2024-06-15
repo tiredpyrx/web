@@ -1,50 +1,50 @@
 "use client";
 
-import { FormEvent } from "react";
+import Editor from "@/components/Editor";
+import { FormEvent, useEffect, useState } from "react";
 import toastr from "toastr";
+import { useForm } from "../hooks/useForm";
 
+// todo change formData to const [form, setForm] = useState({title, description})
 export default function Form() {
+  const { data, setData, post } = useForm({
+    title: "",
+    description: ""
+  })
   const onFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
     try {
-      const response = await fetch("/api/posts", {
-        method: "POST",
-        body: JSON.stringify({
-          title: formData.get("title"),
-          description: formData.get("description"),
-          quantity: formData.get("qty"),
-        }),
-      });
-      const data = await response.json();
+      const response = await post("/api/posts", JSON.stringify(data))
+      const { data: responseData } = response;
 
-      if (data.errors?.length) {
-        for (const errorMessage of data.errors) {
+      if (responseData.errors?.length) {
+        for (const errorMessage of responseData.errors) {
           toastr.error(errorMessage);
         }
-      } else toastr.success(data.message);
+      } else toastr.success(responseData.message);
     } catch (error) {
       console.error({ error });
     }
     return;
   };
 
+  useEffect(() => {
+    console.log(data)
+  }, [data])
+
   return (
     <div className="p-12">
       <h1 className="text-center font-bold text-2xl mb-2">CREATE POST</h1>
-      <form
-        className="grid gap-4 p-4"
-        onSubmit={onFormSubmit}
-      >
-          <input type="text" name="title" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="My awesome post!" />
-
-        <textarea
-          name="description"
-          rows={4}
-          className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="Write your thoughts here..."
-        ></textarea>
-        <button className="text-white bg-blue-500 px-4 py-2 rounded">
+      <form className="grid gap-4 p-4" onSubmit={onFormSubmit}>
+        <input
+          type="text"
+          onChange={(e) => setData("title", e.target.value)}
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="My awesome post!"
+        />
+        {/* <textarea onChange={(e) => setData("description", e.target.value)}></textarea> */}
+        <Editor onChange={(source) => setData("description", source)} />
+        <button className="text-white bg-blue-500 px-4 py-2 rounded mt-6">
           submit
         </button>
       </form>

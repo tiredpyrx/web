@@ -27,7 +27,8 @@ const Header = () => {
       className={classNames(
         "p-4 bg-lime-800 text-white sticky top-0 duration-200 z-50",
         {
-          "opacity-70": isFadable,
+          "bg-lime-700/90": isFadable,
+          "opacity-40": isFadable,
         }
       )}
     >
