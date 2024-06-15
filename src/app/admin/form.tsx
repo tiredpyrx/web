@@ -1,20 +1,24 @@
 "use client";
 
-import Editor from "@/components/Editor";
-import { FormEvent, useEffect, useState } from "react";
+import { Editor } from "@/components/Editor";
+import { FormEvent } from "react";
 import toastr from "toastr";
 import { useForm } from "../hooks/useForm";
 
-// todo change formData to const [form, setForm] = useState({title, description})
 export default function Form() {
-  const { data, setData, post } = useForm({
+  const {
+    data: formData,
+    setData,
+    post,
+  } = useForm({
     title: "",
-    description: ""
-  })
+    description: "",
+  });
+
   const onFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await post("/api/posts", JSON.stringify(data))
+      const response = await post("/api/posts", JSON.stringify(formData));
       const { data: responseData } = response;
 
       if (responseData.errors?.length) {
@@ -28,10 +32,6 @@ export default function Form() {
     return;
   };
 
-  useEffect(() => {
-    console.log(data)
-  }, [data])
-
   return (
     <div className="p-12">
       <h1 className="text-center font-bold text-2xl mb-2">CREATE POST</h1>
@@ -43,7 +43,7 @@ export default function Form() {
           placeholder="My awesome post!"
         />
         {/* <textarea onChange={(e) => setData("description", e.target.value)}></textarea> */}
-        <Editor onChange={(source) => setData("description", source)} />
+        <Editor onChange={(source) => setData("description", source)} replaceBlankParagraphs={{}} />
         <button className="text-white bg-blue-500 px-4 py-2 rounded mt-6">
           submit
         </button>

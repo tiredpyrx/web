@@ -1,21 +1,32 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-const Editor = ({ onChange }: { onChange?: (source: string) => void }) => {
+interface EditorProps {
+  onChange?: (source: string) => void;
+  replaceBlankParagraphs?: {
+    replaceValue?: string;
+  };
+}
+
+const Editor = ({ onChange, replaceBlankParagraphs }: EditorProps) => {
   const [value, setValue] = useState<string>("");
-  const editorRef = useRef<ReactQuill>(null);
 
   const onEditorChange = (source: string) => {
+    // if (replaceBlankParagraphs) {
+    //   source = replaceQuilSourceBlankParagraphsWith({
+    //     source,
+    //     replaceValue: replaceBlankParagraphs.replaceValue,
+    //   });
+    // }
     setValue(source);
     onChange && onChange(source);
   };
 
   return (
     <ReactQuill
-      ref={editorRef}
       value={value}
       modules={{
         clipboard: {
@@ -28,4 +39,4 @@ const Editor = ({ onChange }: { onChange?: (source: string) => void }) => {
   );
 };
 
-export default Editor;
+export { Editor, type EditorProps };

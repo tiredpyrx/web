@@ -5,21 +5,21 @@
 @tailwind utilities;
 
 @layer utilites {
-  .font-code {	
+  .font-code {
     font-family: "Ubuntu Sans Mono", monospace;
   }
 
   .font-web {
-    font-family: 'Open Sans', 'Source Sans Pro', 'Kozuka Gothic Pr6N', Meiryo, sans-serif 
+    font-family: "Open Sans", "Source Sans Pro", "Kozuka Gothic Pr6N", Meiryo,
+      sans-serif;
   }
 }
-
 
 body {
   @apply font-code;
 }
 
-.web-content :is(h1,h2,h3,h4,h5,h6,p,span,strong,b,i,u) {
+.web-content :is(h1, h2, h3, h4, h5, h6, p, span, strong, b, i, u) {
   @apply font-web;
 }
 
@@ -30,7 +30,7 @@ body {
 
 .web-content h1 {
   font-size: 2rem;
-  margin-bottom: .8rem;
+  margin-bottom: 0.8rem;
 }
 
 .web-content h2 {
@@ -45,15 +45,39 @@ body {
 
 .web-content p {
   padding: 5px 0;
-  line-height: 1.67
+  line-height: 1.67;
 }
+
+/* START Control Quill editor empty line break height START */
+
+.web-content p br {
+  content: "";
+  font-size: 15px;
+  margin: 0.65rem;
+  display: block;
+}
+
+@supports selector(:has(br)) {
+  .web-content p:has(br) {
+    padding: 0;
+    line-height: 1.4;
+  }
+
+  .web-content p br {
+    content: initial;
+    display: inline;
+    margin: initial;
+  }
+}
+
+/* END Control Quill editor empty line break height END */
 
 .code-block {
   @apply my-1;
 }
 
 .code-block * {
-  @apply font-code !important
+  @apply font-code !important;
 }
 
 .code-block .shiki {

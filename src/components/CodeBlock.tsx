@@ -1,7 +1,7 @@
 import React from "react";
 import { BundledLanguage, BundledTheme, codeToHtml } from "shiki";
 
-export interface CodeBlockProps {
+interface CodeBlockProps {
   code: string;
   lang?: BundledLanguage;
   theme?: BundledTheme;
@@ -34,5 +34,4 @@ async function CodeBlock({
   );
 }
 
-export { CodeBlock };
-export type { CodeBlockProps };
+export { CodeBlock, type CodeBlockProps };

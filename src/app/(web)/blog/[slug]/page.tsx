@@ -1,7 +1,7 @@
 import parse from "html-react-parser";
 import React from "react";
 
-import { createCodeBlock } from "@/utils";
+import { insertCodeBlocksToString } from "@/utils";
 import { slugify } from "@/utils";
 import { db } from "@/database";
 
@@ -18,7 +18,7 @@ const fetchPost = async (slug: string) => {
 export default async function Page({ params }: { params: { slug: string } }) {
   const post = await fetchPost(params.slug);
   console.log(post.description)
-  let content = await createCodeBlock({ text: post.description as string });
+  let content = await insertCodeBlocksToString({ text: post.description as string });
 
   content = content.map((e: any) => (typeof e === "string" ? parse(e) : e));
 
