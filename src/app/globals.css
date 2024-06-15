@@ -28,6 +28,10 @@ body {
   margin-bottom: 0.5rem;
 }
 
+.web-content p {
+  padding: 8px 0;
+}
+
 .code-block {
   @apply my-1;
 }

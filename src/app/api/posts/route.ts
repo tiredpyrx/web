@@ -15,14 +15,13 @@ export async function POST(request: NextRequest) {
       { status: 422 }
     );
 
-  // const result = await db
-  //   .insertInto("posts")
-  //   .values({
-  //     title,
-  //     description,
-  //   })
-  //   .executeTakeFirst();
-  let result = true;
+   const result = await db
+     .insertInto("posts")
+     .values({
+       title,
+       description,
+     })
+     .executeTakeFirst();
 
   if (!result) {
     return NextResponse.json(

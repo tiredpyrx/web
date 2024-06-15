@@ -16,7 +16,6 @@ const Editor = ({ onChange }: { onChange?: (source: string) => void }) => {
   return (
     <ReactQuill
       ref={editorRef}
-      theme="snow"
       value={value}
       modules={{
         clipboard: {
