@@ -4,8 +4,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilites {
+  .font-code {	
+    font-family: "Ubuntu Sans Mono", monospace;
+  }
+
+  .font-web {
+    font-family: 'Open Sans', 'Source Sans Pro', 'Kozuka Gothic Pr6N', Meiryo, sans-serif 
+  }
+}
+
+
 body {
-  font-family: "Ubuntu Sans Mono", monospace;
+  @apply font-code;
+}
+
+.web-content :is(h1,h2,h3,h4,h5,h6,p,span,strong,b,i,u) {
+  @apply font-web;
 }
 
 .web-content :is(h1, h2, h3, h4, h5, h6) {
@@ -35,6 +50,10 @@ body {
 
 .code-block {
   @apply my-1;
+}
+
+.code-block * {
+  @apply font-code !important
 }
 
 .code-block .shiki {
